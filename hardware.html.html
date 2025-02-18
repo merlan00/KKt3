@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выпадающее меню</title>
+</head>
+<body>
+    <div id="menu-container"></div>
+
+    <script>
+        // Создаем структуру меню
+        const menuData = [
+            {
+                title: "Книги",
+                submenu: [
+                    {
+                        title: "Отечественные",
+                        submenu: [
+                            { title: "Детективы", href: "#" },
+                            { title: "Научная фантастика", href: "#" },
+                            { title: "Исторические", href: "#" }
+                        ]
+                    },
+                    {
+                        title: "Зарубежные",
+                        submenu: [
+                            { title: "Детективы", href: "#" },
+                            { title: "Научная фантастика", href: "#" },
+                            { title: "Исторические", href: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "DVD",
+                submenu: [
+                    {
+                        title: "Отечественные",
+                        submenu: [
+                            { title: "Детективы", href: "#" },
+                            { title: "Научная фантастика", href: "#" },
+                            { title: "Исторические", href: "#" }
+                        ]
+                    },
+                    {
+                        title: "Зарубежные",
+                        submenu: [
+                            { title: "Детективы", href: "#" },
+                            { title: "Научная фантастика", href: "#" },
+                            { title: "Исторические", href: "#" }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // Функция для создания элемента меню
+        function createMenuItem(item) {
+            const li = document.createElement("li");
+            if (item.submenu) {
+                li.classList.add("has-submenu");
+                const a = document.createElement("a");
+                a.textContent = item.title;
+                a.href = "#";
+                li.appendChild(a);
+
+                const ul = document.createElement("ul");
+                ul.classList.add("submenu");
+                item.submenu.forEach(subItem => {
+                    ul.appendChild(createMenuItem(subItem));
+                });
+                li.appendChild(ul);
+
+                a.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    li.classList.toggle("open");
+                    ul.style.display = li.classList.contains("open") ? "block" : "none";
+                });
+            } else {
+                const a = document.createElement("a");
+                a.textContent = item.title;
+                a.href = item.href;
+                li.appendChild(a);
+            }
+            return li;
+        }
+
+        // Создаем меню
+        const menuContainer = document.getElementById("menu-container");
+        const ul = document.createElement("ul");
+        ul.classList.add("menu");
+        menuData.forEach(item => {
+            ul.appendChild(createMenuItem(item));
+        });
+        menuContainer.appendChild(ul);
+
+        // Добавляем стили
+        const style = document.createElement("style");
+        style.textContent = `
+            .menu, .submenu {
+                list-style-type: none;
+                padding-left: 20px;
+            }
+            .submenu {
+                display: none;
+            }
+            .has-submenu > a {
+                cursor: pointer;
+            }
+            .has-submenu > a::after {
+                content: " ▼";
+            }
+            .has-submenu.open > a::after {
+                content: " ▲";
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
